@@ -1,10 +1,10 @@
 part of mklocal_search;
 
 class MklocalSearchResponse {
-  List<MapItem>? mapItems;
-  BoundingRegion? boundingRegion;
-
-  MklocalSearchResponse({this.mapItems, this.boundingRegion});
+  MklocalSearchResponse({
+    this.mapItems,
+    this.boundingRegion,
+  });
 
   MklocalSearchResponse.fromJson(Map<String, dynamic> json) {
     if (json['mapItems'] != null) {
@@ -13,10 +13,11 @@ class MklocalSearchResponse {
         mapItems!.add(MapItem.fromJson(v));
       });
     }
-    boundingRegion = json['boundingRegion'] != null
-        ? BoundingRegion.fromJson(json['boundingRegion'])
-        : null;
+    boundingRegion = json['boundingRegion'] != null ? BoundingRegion.fromJson(json['boundingRegion']) : null;
   }
+
+  List<MapItem>? mapItems;
+  BoundingRegion? boundingRegion;
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};

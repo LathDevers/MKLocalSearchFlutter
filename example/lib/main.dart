@@ -16,7 +16,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  MklocalSearchResponse? searchResonse = null;
+  MklocalSearchResponse? searchResponse;
   final _mklocalSearchPlugin = MklocalSearch();
 
   @override
@@ -27,14 +27,13 @@ class _MyAppState extends State<MyApp> {
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
-    MklocalSearchResponse? _searchResonse;
+    MklocalSearchResponse? searchResponse;
     // Platform messages may fail, so we use a try/catch PlatformException.
     // We also handle the message potentially returning null.
     try {
-      searchResonse =
-          await _mklocalSearchPlugin.naturalLanguageQuery("apple store");
+      searchResponse = await _mklocalSearchPlugin.naturalLanguageQuery("apple store");
     } on PlatformException {
-      searchResonse = null;
+      searchResponse = null;
     }
 
     // If the widget was removed from the tree while the asynchronous platform
@@ -43,7 +42,7 @@ class _MyAppState extends State<MyApp> {
     if (!mounted) return;
 
     setState(() {
-      _searchResonse = searchResonse;
+      this.searchResponse = searchResponse;
     });
   }
 
@@ -57,92 +56,56 @@ class _MyAppState extends State<MyApp> {
         body: Column(children: [
           Expanded(
             child: ListView.builder(
-              itemCount: searchResonse?.mapItems?.length ?? 0,
+              itemCount: searchResponse?.mapItems?.length ?? 0,
               itemBuilder: (context, index) {
                 return Card(
                     child: Column(children: [
-                  Text("Is current location:"),
-                  Text(searchResonse?.mapItems?[index].isCurrentLocation == null
+                  const Text("Is current location:"),
+                  Text(searchResponse?.mapItems?[index].isCurrentLocation == null
                       ? "not avaible"
-                      : searchResonse?.mapItems?[index].isCurrentLocation ??
-                              false
+                      : searchResponse?.mapItems?[index].isCurrentLocation ?? false
                           ? "Yes"
                           : "No"),
-                  Text("Name:"),
-                  Text(searchResonse?.mapItems?[index].name ?? ""),
-                  Text("Phone:"),
-                  Text(searchResonse?.mapItems?[index].phoneNumber ?? ""),
-                  Text("Website:"),
-                  Text(searchResonse?.mapItems?[index].url ?? ""),
-                  Text("Placemark data:"),
-                  Text("Country:"),
-                  Text(
-                      searchResonse?.mapItems?[index].placemark?.country ?? ""),
-                  Text("Country code:"),
-                  Text(searchResonse
-                          ?.mapItems?[index].placemark?.isoCountryCode ??
-                      ""),
-                  Text("Postal code:"),
-                  Text(searchResonse?.mapItems?[index].placemark?.postalCode ??
-                      ""),
-                  Text("Administrative area:"),
-                  Text(searchResonse
-                          ?.mapItems?[index].placemark?.administrativeArea ??
-                      ""),
-                  Text("Locality:"),
-                  Text(searchResonse?.mapItems?[index].placemark?.locality ??
-                      ""),
-                  Text("Thoroughfare:"),
-                  Text(
-                      searchResonse?.mapItems?[index].placemark?.thoroughfare ??
-                          ""),
-                  Text("Sub thoroughfare:"),
-                  Text(searchResonse
-                          ?.mapItems?[index].placemark?.subThoroughfare ??
-                      ""),
-                  Text("Name:"),
-                  Text(searchResonse?.mapItems?[index].placemark?.name ?? ""),
-                  Text("Location data:"),
-                  Text("Latitude:"),
-                  Text(searchResonse?.mapItems?[index].placemark?.location
-                          ?.coordinate?.latitude
-                          .toString() ??
-                      ""),
-                  Text("Longitude:"),
-                  Text(searchResonse?.mapItems?[index].placemark?.location
-                          ?.coordinate?.longitude
-                          .toString() ??
-                      ""),
-                  Text("Altitude:"),
-                  Text(searchResonse
-                          ?.mapItems?[index].placemark?.location?.altitude
-                          .toString() ??
-                      ""),
-                  Text("Horizontal accuracy:"),
-                  Text(searchResonse?.mapItems?[index].placemark?.location
-                          ?.horizontalAccuracy
-                          .toString() ??
-                      ""),
-                  Text("Vertical accuracy:"),
-                  Text(searchResonse?.mapItems?[index].placemark?.location
-                          ?.verticalAccuracy
-                          .toString() ??
-                      ""),
-                  Text("Speed:"),
-                  Text(searchResonse
-                          ?.mapItems?[index].placemark?.location?.speed
-                          .toString() ??
-                      ""),
-                  Text("Course:"),
-                  Text(searchResonse
-                          ?.mapItems?[index].placemark?.location?.course
-                          .toString() ??
-                      ""),
-                  Text("Timestamp:"),
-                  Text(searchResonse
-                          ?.mapItems?[index].placemark?.location?.timestamp
-                          .toString() ??
-                      ""),
+                  const Text("Name:"),
+                  Text(searchResponse?.mapItems?[index].name ?? ""),
+                  const Text("Phone:"),
+                  Text(searchResponse?.mapItems?[index].phoneNumber ?? ""),
+                  const Text("Website:"),
+                  Text(searchResponse?.mapItems?[index].url ?? ""),
+                  const Text("Placemark data:"),
+                  const Text("Country:"),
+                  Text(searchResponse?.mapItems?[index].placemark?.country ?? ""),
+                  const Text("Country code:"),
+                  Text(searchResponse?.mapItems?[index].placemark?.isoCountryCode ?? ""),
+                  const Text("Postal code:"),
+                  Text(searchResponse?.mapItems?[index].placemark?.postalCode ?? ""),
+                  const Text("Administrative area:"),
+                  Text(searchResponse?.mapItems?[index].placemark?.administrativeArea ?? ""),
+                  const Text("Locality:"),
+                  Text(searchResponse?.mapItems?[index].placemark?.locality ?? ""),
+                  const Text("Thoroughfare:"),
+                  Text(searchResponse?.mapItems?[index].placemark?.thoroughfare ?? ""),
+                  const Text("Sub thoroughfare:"),
+                  Text(searchResponse?.mapItems?[index].placemark?.subThoroughfare ?? ""),
+                  const Text("Name:"),
+                  Text(searchResponse?.mapItems?[index].placemark?.name ?? ""),
+                  const Text("Location data:"),
+                  const Text("Latitude:"),
+                  Text(searchResponse?.mapItems?[index].placemark?.location?.coordinate?.latitude.toString() ?? ""),
+                  const Text("Longitude:"),
+                  Text(searchResponse?.mapItems?[index].placemark?.location?.coordinate?.longitude.toString() ?? ""),
+                  const Text("Altitude:"),
+                  Text(searchResponse?.mapItems?[index].placemark?.location?.altitude.toString() ?? ""),
+                  const Text("Horizontal accuracy:"),
+                  Text(searchResponse?.mapItems?[index].placemark?.location?.horizontalAccuracy.toString() ?? ""),
+                  const Text("Vertical accuracy:"),
+                  Text(searchResponse?.mapItems?[index].placemark?.location?.verticalAccuracy.toString() ?? ""),
+                  const Text("Speed:"),
+                  Text(searchResponse?.mapItems?[index].placemark?.location?.speed.toString() ?? ""),
+                  const Text("Course:"),
+                  Text(searchResponse?.mapItems?[index].placemark?.location?.course.toString() ?? ""),
+                  const Text("Timestamp:"),
+                  Text(searchResponse?.mapItems?[index].placemark?.location?.timestamp.toString() ?? ""),
                 ]));
               },
             ),

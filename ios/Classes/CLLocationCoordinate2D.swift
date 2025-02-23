@@ -8,14 +8,14 @@
 import Foundation
 import MapKit
 
-struct CLLocationCoordinate2D : Codable{
-    
+struct CLLocationCoordinate2D: Codable {
+
     public var latitude: CLLocationDegrees
 
     public var longitude: CLLocationDegrees
-    
-    init(coords:MapKit.CLLocationCoordinate2D){
-        latitude=coords.latitude;
-        longitude=coords.longitude;
+
+    init(coords: MapKit.CLLocationCoordinate2D) {
+        latitude = coords.latitude
+        longitude = coords.longitude
     }
 }

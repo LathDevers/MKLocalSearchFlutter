@@ -1,14 +1,18 @@
 part of mklocal_search;
 
 class Coordinate {
-  double? longitude;
-  double? latitude;
+  Coordinate({
+    this.longitude,
+    this.latitude,
+  });
 
-  Coordinate({this.longitude, this.latitude});
   Coordinate.fromJson(Map<String, dynamic> json) {
     longitude = json['longitude'];
     latitude = json['latitude'];
   }
+
+  double? longitude;
+  double? latitude;
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};

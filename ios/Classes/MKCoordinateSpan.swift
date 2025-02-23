@@ -8,17 +8,15 @@
 import Foundation
 import MapKit
 
-public struct MKCoordinateSpan :Codable{
-    
-    
+public struct MKCoordinateSpan: Codable {
+
     public var latitudeDelta: CLLocationDegrees
 
     public var longitudeDelta: CLLocationDegrees
 
-
-    public init(mkCoordinateSpan: MapKit.MKCoordinateSpan){
-        latitudeDelta = mkCoordinateSpan.latitudeDelta;
-        longitudeDelta = mkCoordinateSpan.longitudeDelta;
+    public init(mkCoordinateSpan: MapKit.MKCoordinateSpan) {
+        latitudeDelta = mkCoordinateSpan.latitudeDelta
+        longitudeDelta = mkCoordinateSpan.longitudeDelta
     }
 
 }
