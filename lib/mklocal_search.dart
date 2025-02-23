@@ -19,7 +19,7 @@ part 'models/span.dart';
 part 'models/bounding_region.dart';
 
 class MklocalSearch {
-  Future<MklocalSearchResponse?> naturalLanguageQuery(String query) {
-    return MklocalSearchPlatform.instance.naturalLanguageQuery(query);
+  Future<MklocalSearchResponse?> naturalLanguageQuery(String query, Coordinate center, Span span) {
+    return MklocalSearchPlatform.instance.naturalLanguageQuery(query, center, span);
   }
 }
