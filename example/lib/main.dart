@@ -31,7 +31,11 @@ class _MyAppState extends State<MyApp> {
     // Platform messages may fail, so we use a try/catch PlatformException.
     // We also handle the message potentially returning null.
     try {
-      searchResponse = await _mklocalSearchPlugin.naturalLanguageQuery("apple store");
+      searchResponse = await _mklocalSearchPlugin.naturalLanguageQuery(
+        "apple store",
+        Coordinate(latitude: 37.7749, longitude: -122.4194),
+        Span(latitudeDelta: 0.1, longitudeDelta: 0.1),
+      );
     } on PlatformException {
       searchResponse = null;
     }

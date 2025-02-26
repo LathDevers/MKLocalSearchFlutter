@@ -1,5 +1,6 @@
 import Flutter
 import MapKit
+import CoreLocation
 import UIKit
 
 public class SwiftMklocalSearchPlugin: NSObject, FlutterPlugin {
@@ -13,46 +14,69 @@ public class SwiftMklocalSearchPlugin: NSObject, FlutterPlugin {
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
         case "naturalLanguageQuery":
-            if call.arguments == nil {
-                result("Natural query string must not be nil")
+            guard let args = call.arguments as? [String: Any],
+                  let query = args["query"] as? String, !query.isEmpty else {
+                result(FlutterError(code: "INVALID_ARGUMENT", message: "Query string must not be empty", details: nil))
+                return
             }
-            let query: String = String(describing: call.arguments!)
-            naturalLanguageQuery(query, flutterResult: result)
-            return
+
+            var region: MapKit.MKCoordinateRegion?
+            if let regionData = args["region"] as? [String: Any],
+               let lat = regionData["latitude"] as? Double,
+               let lon = regionData["longitude"] as? Double,
+               let latDelta = regionData["latitudeDelta"] as? Double,
+               let lonDelta = regionData["longitudeDelta"] as? Double {
+
+                region = MapKit.MKCoordinateRegion(
+                    center: CoreLocation.CLLocationCoordinate2D(latitude: lat, longitude: lon),
+                    span: MapKit.MKCoordinateSpan(latitudeDelta: latDelta, longitudeDelta: lonDelta)
+                )
+            }
+
+            naturalLanguageQuery(query, region: region, flutterResult: result)
         default:
-            result("Invalid flutter call invokeMethod name")
+            result(FlutterError(code: "INVALID_METHOD", message: "Invalid method call", details: nil))
         }
     }
 
-    private func naturalLanguageQuery(_ query: String, flutterResult: @escaping FlutterResult) {
-        if query.isEmpty {
-            flutterResult("Natural query string must not be empty")
-            return
-        }
-        var region: MapKit.MKCoordinateRegion? = nil
+    private func naturalLanguageQuery(_ query: String, region: MapKit.MKCoordinateRegion?, flutterResult: @escaping FlutterResult) {
         let request = MKLocalSearch.Request()
         request.naturalLanguageQuery = query
-        if let r: MapKit.MKCoordinateRegion = region {
-            request.region = r
+        
+        // Use provided region if available
+        if let region = region {
+            request.region = region
         }
+
         let search = MKLocalSearch(request: request)
-        search.start(completionHandler: { _result, _error in
-            if let result = _result {
-                let json: String = self.getResponse(result)
-                flutterResult(json)
-            } else if let error = _error {
-                flutterResult("Unexpected error: \(error).")
+        search.start { result, error in
+            if let error = error {
+                flutterResult(FlutterError(code: "SEARCH_ERROR", message: "Error performing search", details: error.localizedDescription))
+            } else if let result = result {
+                do {
+                    let json = try self.getResponse(result)
+                    flutterResult(json)
+                } catch {
+                    flutterResult(FlutterError(code: "ENCODING_ERROR", message: "Failed to encode search results", details: error.localizedDescription))
+                }
+            } else {
+                flutterResult(FlutterError(code: "NO_RESULTS", message: "No results found", details: nil))
             }
-        })
+        }
     }
 
-    private func getResponse(_ result: MKLocalSearch.Response) -> String {
-        let encodableResponse: MklocalSearchResponse = MklocalSearchResponse(
+    private func getResponse(_ result: MKLocalSearch.Response) throws -> String {
+        let encodableResponse = MklocalSearchResponse(
             mapItems: result.mapItems, boundingRegion: result.boundingRegion)
+        
         let encoder = JSONEncoder()
         encoder.outputFormatting = .prettyPrinted
-        let encodedData = try! encoder.encode(encodableResponse)
-        let json = String(data: encodedData, encoding: .utf8)!
+        
+        let encodedData = try encoder.encode(encodableResponse)
+        guard let json = String(data: encodedData, encoding: .utf8) else {
+            throw NSError(domain: "JSONEncodingError", code: 0, userInfo: nil)
+        }
+        
         return json
     }
 }
